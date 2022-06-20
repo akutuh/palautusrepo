@@ -1,1 +1,1 @@
-"osa0 teht„vien vastaukset" 
+osa0 tehävien vastaukset
