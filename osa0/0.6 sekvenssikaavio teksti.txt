@@ -1,0 +1,16 @@
+note over selain:
+Single Page App- versiossa tallenna nappia
+painaessa tapahtumakäsittelijä
+estää lomakkeen oletusarvoisen toiminnan 
+end note
+note over selain:
+Luodaan uusi muitiinpano, lisätään se muistiinpanoihin
+end note
+note over selain:
+Ladataan muistiinpanojen lista uudeleen
+end note
+note over selain:
+Lähetetään uusi muistiinpano palvelimelle
+end note
+selain->palvelin: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+palvelin-->selain: HTTP status 201
