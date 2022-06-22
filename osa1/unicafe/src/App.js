@@ -10,12 +10,16 @@ const Statistics = (props) => {
   }
   return (
     <div>
-      <StatisticLine text="good" value={props.feedbackgood} />
-      <StatisticLine text="neutral" value={props.feedbackneutral} />
-      <StatisticLine text="bad" value={props.feedbackbad} />
-      <StatisticLine text="all" value={props.feedbackall} />
-      <StatisticLine text="average" value={(props.feedbackgood - props.feedbackbad)/props.feedbackall}/>
-      <StatisticLine text="positive" value={props.feedbackgood / props.feedbackall * 100}  />
+      <table>
+        <tbody>
+          <StatisticLine text="good" value={props.feedbackgood} />
+          <StatisticLine text="neutral" value={props.feedbackneutral} />
+          <StatisticLine text="bad" value={props.feedbackbad} />
+          <StatisticLine text="all" value={props.feedbackall} />
+          <StatisticLine text="average" value={(props.feedbackgood - props.feedbackbad)/props.feedbackall}/>
+          <StatisticLine text="positive" value={props.feedbackgood / props.feedbackall * 100}  />
+        </tbody>
+      </table>
     </div>
   )
 }
@@ -23,15 +27,17 @@ const Statistics = (props) => {
 const StatisticLine = (props) => {
   if (props.text === "positive") {
     return (
-      <div>
-        {props.text} {props.value} %
-      </div>
+      <tr>
+        <td>{props.text}</td>
+        <td>{props.value} %</td>
+      </tr>
     )
   }
   return (
-    <div>
-      {props.text} {props.value}
-    </div>
+    <tr>
+      <td>{props.text}</td>
+      <td>{props.value}</td>
+    </tr>
   )
 }
 
