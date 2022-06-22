@@ -1,13 +1,17 @@
 import { useState } from 'react'
 
+const Votes = (props) => {
+  return (
+    <div>
+      has {props.points[props.selected]} votes
+    </div>
+  )
+}
 
 const Button = ({ handleClick, text }) => (
-  <div>
-    <button onClick={handleClick}>
-      {text}
-    </button>
-  </div>
-
+  <button onClick={handleClick}>
+    {text}
+  </button>
 )
 function getRandomInt(max) {
   return Math.floor(Math.random() * max);
@@ -15,26 +19,38 @@ function getRandomInt(max) {
 
 const App = () => {
   const anecdotes = [
-    '0. If it hurts, do it more often.',
-    '1. Adding manpower to a late software project makes it later!',
-    '2. The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
-    '3. Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
-    '4. Premature optimization is the root of all evil.',
-    '5. Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
-    '6. Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when dianosing patients.'
+    'If it hurts, do it more often.',
+    'Adding manpower to a late software project makes it later!',
+    'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
+    'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
+    'Premature optimization is the root of all evil.',
+    'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
+    'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when dianosing patients.'
   ]
    
   const [selected, setSelected] = useState(0)
+  const [points, setPoints] = useState([0, 0, 0, 0, 0, 0, 0])
+
+  const handleVoteClick = () =>{
+    const copy = [...points]
+    copy[selected] += 1
+    setPoints(copy)
+  }
 
   const handleClick = () => {
     setSelected(getRandomInt(7))
-    console.log(selected)
+  }
+  const handleConsoleClock = () => {
+    console.log(points)
   }
 
   return (
     <div>
       {anecdotes[selected]}
-      <Button handleClick={handleClick} text='next anecdote'/>
+      <Votes points={points} selected={selected}  />
+      <Button handleClick={handleVoteClick} text='vote' />
+      <Button handleClick={handleClick} text='next anecdote'  />
+      <Button handleClick={handleConsoleClock} text='print points'  />
     </div>
   )
 }
