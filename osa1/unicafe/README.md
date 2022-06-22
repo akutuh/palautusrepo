@@ -1,1 +1,1 @@
-osan 1 tehtavien ratkaisut
+osan 1 tehtavien 1.6-1.11 react-koodi
