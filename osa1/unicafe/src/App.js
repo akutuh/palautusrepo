@@ -10,15 +10,31 @@ const Statistics = (props) => {
   }
   return (
     <div>
-      <p>good {props.feedbackgood}</p>
-      <p>neutral {props.feedbackneutral}</p>
-      <p>bad {props.feedbackbad}</p>
-      <p>all {props.feedbackall}</p>
-      <p>average {(props.feedbackgood - props.feedbackbad)/props.feedbackall}</p>
-      <p>positive {props.feedbackgood / props.feedbackall * 100} %</p>
+      <StatisticLine text="good" value={props.feedbackgood} />
+      <StatisticLine text="neutral" value={props.feedbackneutral} />
+      <StatisticLine text="bad" value={props.feedbackbad} />
+      <StatisticLine text="all" value={props.feedbackall} />
+      <StatisticLine text="average" value={(props.feedbackgood - props.feedbackbad)/props.feedbackall}/>
+      <StatisticLine text="positive" value={props.feedbackgood / props.feedbackall * 100}  />
     </div>
   )
 }
+
+const StatisticLine = (props) => {
+  if (props.text === "positive") {
+    return (
+      <div>
+        {props.text} {props.value} %
+      </div>
+    )
+  }
+  return (
+    <div>
+      {props.text} {props.value}
+    </div>
+  )
+}
+
 
 const Button = ({ handleClick, text }) => (
   <button onClick={handleClick}>
