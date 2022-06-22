@@ -13,7 +13,6 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
-
 const App = () => {
   const anecdotes = [
     '0. If it hurts, do it more often.',
