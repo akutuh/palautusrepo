@@ -29,7 +29,7 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
-  const [points, setPoints] = useState([0, 0, 0, 0, 0, 0, 0])
+  const [points, setPoints] = useState(new Uint8Array(7))
 
   const handleVoteClick = () =>{
     const copy = [...points]
