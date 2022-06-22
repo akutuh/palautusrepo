@@ -40,9 +40,6 @@ const App = () => {
   const handleClick = () => {
     setSelected(getRandomInt(7))
   }
-  const handleConsoleClock = () => {
-    console.log(points)
-  }
 
   return (
     <div>
@@ -50,7 +47,6 @@ const App = () => {
       <Votes points={points} selected={selected}  />
       <Button handleClick={handleVoteClick} text='vote' />
       <Button handleClick={handleClick} text='next anecdote'  />
-      <Button handleClick={handleConsoleClock} text='print points'  />
     </div>
   )
 }
