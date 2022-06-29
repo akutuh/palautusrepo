@@ -11,11 +11,18 @@ const SingleCountry = ({ country }) => {
       {Object.values(country.languages).map((value, index) => {
         return (
           <li key={index}>{value}</li>
+
         );
       })}
       <p></p>
       <img src={country.flags.png} alt='flag'/>
     </>
+  )
+}
+
+const MultipleCountries = (props) => {
+  return (
+    <p>{props.country.name.common} <button value={props.country.name.common.toLowerCase()}onClick={props.handleClick}>show</button></p>
   )
 }
 
@@ -29,7 +36,7 @@ const CountriesList = (props) => {
     return (
       <>
         {allcountries.map(country =>
-          <li key={country.name.official}>{country.name.common}</li>
+          <MultipleCountries country={country} key={country.name.official} handleClick={props.handleClick}/>
           )}
       </>
     )
@@ -77,11 +84,16 @@ const App = () => {
     setnewSearch(event.target.value)
   } 
 
+  const handleClick = (event) => {
+    console.log(event.target.value)
+    setnewSearch(event.target.value)
+  } 
+
 
   return (
     <div>
       <SearchForm handleSubmit={handleSubmit} handleSearch={handleSearch}/>
-      <CountriesList countries={countries} newSearch={newSearch}/>
+      <CountriesList countries={countries} newSearch={newSearch} handleClick={handleClick}/>
     </div>
   )
 
