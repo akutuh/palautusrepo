@@ -67,8 +67,29 @@ const App = () => {
   }
   const addName = (event) => {
     event.preventDefault()
-    if(persons.some(person => person.name === newName)){
-      window.alert(`${newName} is already added to phonebook`);
+    if(persons.some(person => person.name === newName && person.number !== '')){
+      window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+      const numberForPerson = persons.find(person => person.name === newName)
+      const changedNumber = { ...numberForPerson, number: newNumber}
+      personService
+        .update(changedNumber, numberForPerson.id)
+        .then((response) => {
+          setPersons(persons.map(person => person.id !== numberForPerson.id ? person : response.data))
+        })
+        setNewName('')
+        setNewNumber('')
+      //todo replace number
+    }  else if (persons.some(person => person.name === newName && person.number === '')){
+      // add number to existing name where number null
+      const numberForPerson = persons.find(person => person.name === newName)
+      const changedNumber = { ...numberForPerson, number: newNumber}
+      personService
+        .update(changedNumber, numberForPerson.id)
+        .then((response) => {
+          setPersons(persons.map(person => person.id !== numberForPerson.id ? person : response.data))
+        })
+        setNewName('')
+        setNewNumber('')
     } else {
       const nameObject = {
         name: newName,
