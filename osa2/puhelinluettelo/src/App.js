@@ -2,17 +2,17 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import personService from './services/persons'
 
-const Name = ({ person }) => {
+const Name = ({ person, deleteName }) => {
   return (
-    <li>{person.name} {person.number}</li>
+    <li>{person.name} {person.number} <button onClick={() => deleteName(person)}>delete</button></li>
   )
 }
-const AllPersons = (props) => {
-  const filteredNames = props.persons.filter(person => person.name.includes(props.newFilterName))
+const AllPersons = ({ persons, newFilterName, deleteName}) => {
+  const filteredNames = persons.filter(person => person.name.includes(newFilterName))
   return (
     <ul>
       {filteredNames.map(person =>
-          <Name key={person.name} person={person}/>)}
+        <Name key={person.name} person={person} deleteName={deleteName}/>)}
     </ul>
   )
 }
@@ -85,6 +85,19 @@ const App = () => {
     
   }
 
+  const deleteName = (personO) => {
+    if (window.confirm(`Delete ${personO.name}?`)) {
+      console.log('delete', personO.id)
+      personService
+        .deletePerson(personO.id)
+        .then(() => {
+          setPersons(persons.filter((person) => person.id !== personO.id))
+        })
+    } else {
+      console.log('delete canceled')
+    }
+  }
+
   const handleNameChange = (event) => {
     console.log(event.target.value)
     setNewName(event.target.value)
@@ -112,7 +125,11 @@ const App = () => {
         newNumber={newNumber} 
         onSubmit={addName}  />
       <h3>Numbers</h3>
-      <AllPersons persons={persons} newFilterName={newFilterName}/>
+      <AllPersons 
+        persons={persons} 
+        newFilterName={newFilterName}
+        deleteName={deleteName}
+        />
     </div>
   )
 
