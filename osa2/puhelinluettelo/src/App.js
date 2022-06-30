@@ -2,6 +2,44 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import personService from './services/persons'
 
+const Notification = ({ message }) => {
+  if (message === ''){
+    return null
+  } else if (message.includes('removed')) {
+    const errorStyle = {
+      color: 'red',
+      background: 'lightgrey',
+      fontSize: 20,
+      borderStyle: 'solid',
+      borderRadius: 5,
+      padding: 10,
+      marginBottom: 10
+    }
+    
+    return (
+      <div style={errorStyle}>
+        {message}
+      </div>
+    )
+  } else {
+    const errorStyle = {
+      color: 'green',
+      background: 'lightgrey',
+      fontSize: 20,
+      borderStyle: 'solid',
+      borderRadius: 5,
+      padding: 10,
+      marginBottom: 10
+    }
+    
+    return (
+      <div style={errorStyle}>
+        {message}
+      </div>
+    )
+  }
+}
+
 const Name = ({ person, deleteName }) => {
   return (
     <li>{person.name} {person.number} <button onClick={() => deleteName(person)}>delete</button></li>
@@ -49,6 +87,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilterName, setNewFilterName] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState('')
 
   useEffect(() => {
     console.log('effect')
@@ -68,6 +107,7 @@ const App = () => {
   const addName = (event) => {
     event.preventDefault()
     if(persons.some(person => person.name === newName && person.number !== '')){
+      // replace number
       window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
       const numberForPerson = persons.find(person => person.name === newName)
       const changedNumber = { ...numberForPerson, number: newNumber}
@@ -76,11 +116,24 @@ const App = () => {
         .then((response) => {
           setPersons(persons.map(person => person.id !== numberForPerson.id ? person : response.data))
         })
+        .catch(error => {
+          setNotificationMessage(
+            `Information of ${numberForPerson.name} has already been removed from server.`
+          )
+          setTimeout(() => {
+            setNotificationMessage('')
+          }, 5000)
+        })
         setNewName('')
         setNewNumber('')
-      //todo replace number
+        setNotificationMessage(
+          `Replaced old number with new number ${newNumber}.`
+        )
+        setTimeout(() => {
+          setNotificationMessage('')
+        }, 5000)
     }  else if (persons.some(person => person.name === newName && person.number === '')){
-      // add number to existing name where number null
+      // add number to existing name where number ''
       const numberForPerson = persons.find(person => person.name === newName)
       const changedNumber = { ...numberForPerson, number: newNumber}
       personService
@@ -88,8 +141,22 @@ const App = () => {
         .then((response) => {
           setPersons(persons.map(person => person.id !== numberForPerson.id ? person : response.data))
         })
+        .catch(error => {
+          setNotificationMessage(
+            `Information of ${numberForPerson.name} has already been removed from server.`
+          )
+          setTimeout(() => {
+            setNotificationMessage('')
+          }, 5000)
+        })
         setNewName('')
         setNewNumber('')
+        setNotificationMessage(
+          `Added new number ${newNumber}.`
+        )
+        setTimeout(() => {
+          setNotificationMessage('')
+        }, 5000)
     } else {
       const nameObject = {
         name: newName,
@@ -102,6 +169,12 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
+        setNotificationMessage(
+          `Added ${nameObject.name}`
+        )
+        setTimeout(() => {
+          setNotificationMessage('')
+        }, 5000)
     }
     
   }
@@ -114,6 +187,12 @@ const App = () => {
         .then(() => {
           setPersons(persons.filter((person) => person.id !== personO.id))
         })
+      setNotificationMessage(
+        `Removed ${personO.name}`
+      )
+      setTimeout(() => {
+        setNotificationMessage('')
+      }, 5000)
     } else {
       console.log('delete canceled')
     }
@@ -137,6 +216,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} />
       <FormFilter handleNameFilterChange={handleNameFilterChange}
         onSubmit={filterNames}  />
       <h3>add a new</h3>
