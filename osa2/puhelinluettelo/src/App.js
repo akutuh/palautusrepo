@@ -6,10 +6,11 @@ const Name = ({ person }) => {
     <li>{person.name} {person.number}</li>
   )
 }
-const AllPersons = ({ persons }) => {
+const AllPersons = (props) => {
+  const filteredNames = props.persons.filter(person => person.name.includes(props.newFilterName))
   return (
     <ul>
-      {persons.map(person =>
+      {filteredNames.map(person =>
           <Name key={person.name} person={person}/>)}
     </ul>
   )
@@ -33,9 +34,9 @@ const PersonForm = (props) => {
 
 const FormFilter = (props) => {
   return(
-    <form onSubmit={props.onSubmit}>
+    <form onSubmit={props.filterNames}>
         <div>
-          filter shown with<input value={props.newFilterName} onChange={props.onFilterChange}/>
+          filter shown with <input onChange={props.handleNameFilterChange}/>
         </div>
       </form>
   )
@@ -47,7 +48,6 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilterName, setNewFilterName] = useState('')
-  const [filteredList, setFilteredList] = useState(persons)
 
   useEffect(() => {
     console.log('effect')
@@ -62,8 +62,7 @@ const App = () => {
 
   const filterNames = (event) => {
     event.preventDefault()
-    setFilteredList(persons.filter(person => person.name !== newFilterName))
-    
+    console.log('submitted')
   }
   const addName = (event) => {
     event.preventDefault()
@@ -74,11 +73,13 @@ const App = () => {
         name: newName,
         number: newNumber
       }
-  
-      setPersons(persons.concat(nameObject))
-      setNewName('')
+      axios
+        .post('http://localhost:3001/persons', nameObject)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          setNewName('')
       setNewNumber('')
-      setFilteredList(persons)
+        })
     }
     
   }
@@ -101,8 +102,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <FormFilter onFilterChange={handleNameFilterChange}
-        newFilterName={newFilterName}
+      <FormFilter handleNameFilterChange={handleNameFilterChange}
         onSubmit={filterNames}  />
       <h3>add a new</h3>
       <PersonForm onNameChange={handleNameChange} 
@@ -111,7 +111,7 @@ const App = () => {
         newNumber={newNumber} 
         onSubmit={addName}  />
       <h3>Numbers</h3>
-      <AllPersons persons={persons} />
+      <AllPersons persons={persons} newFilterName={newFilterName}/>
     </div>
   )
 
